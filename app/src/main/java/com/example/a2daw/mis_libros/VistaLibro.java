@@ -6,6 +6,7 @@ package com.example.a2daw.mis_libros;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +21,8 @@ import java.sql.SQLException;
 
 public class VistaLibro extends AppCompatActivity {
 
-    private Cursor cursor;
-    private BDLibro DB = new BDLibro(this);
     long ID;
     boolean anhadir, editar, eliminar;
-
     EditText et_titulo;
     EditText et_autor;
     EditText et_editorial;
@@ -35,7 +33,8 @@ public class VistaLibro extends AppCompatActivity {
     CheckBox cb_leido;
     RatingBar rat_nota;
     EditText et_resumen;
-
+    private Cursor cursor;
+    private BDLibro DB = new BDLibro(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +110,18 @@ public class VistaLibro extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit:
                 Actualizar();
+                finish();
+
+
                 break;
             case R.id.guardar: {
                 Insertar();
+                finish();
                 break;
             }
             case R.id.eliminar: {
                 MuestraAlertaEliminar("Eliminar libro", "¿Desea eliminar el libro " + et_titulo.getText().toString() + "?").show();
+
                 break;
             }
         }
@@ -155,6 +159,7 @@ public class VistaLibro extends AppCompatActivity {
 
     /**
      * Muestra una alerta modal, preguntando si quiere o no eliminar un libro
+     *
      * @param titulo
      * @param mensaje
      * @return
@@ -219,6 +224,7 @@ public class VistaLibro extends AppCompatActivity {
 
                 Toast.makeText(this, "Libro actualizado correctamente", Toast.LENGTH_SHORT).show();
                 DB.Cerrar();
+
             }
 
         } catch (Exception e) {

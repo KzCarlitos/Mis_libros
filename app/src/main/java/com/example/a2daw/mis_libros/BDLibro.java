@@ -13,9 +13,6 @@ import android.util.Log;
 
 import java.sql.SQLException;
 
-/**
- * Created by 2DAW on 29/01/2016.
- */
 
 /**
  * Clase que gestiona la Base de datos
@@ -56,37 +53,9 @@ public class BDLibro {
             + NOTA + " float, "
             + RESUMEN + " text "
             + ");";
-
+    final Context mCtx;
     DatabaseHelper mDbHelper;
     SQLiteDatabase myBD;
-
-    final Context mCtx;
-
-/*    public LibrosDB(Context ctx){
-        this.mCtx = ctx;
-        mDbHelper = new DatabaseHelper(mCtx);
-    }*/
-
-    private class DatabaseHelper extends SQLiteOpenHelper {
-
-        DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DATABASE_CREATE);//Ejecutamos la setencia de crear la tabla libros
-        }
-
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to " //$NON-NLS-1$//$NON-NLS-2$
-                    + newVersion + ", which will destroy all old data"); //$NON-NLS-1$
-            //db.execSQL("DROP TABLE IF EXISTS usersinfo"); //$NON-NLS-1$
-            onCreate(db);
-        }
-    }
 
 
     public BDLibro(Context ctx) {
@@ -94,9 +63,8 @@ public class BDLibro {
         mDbHelper = new DatabaseHelper(mCtx);
     }
 
-
     /**
-     * Añade un registro de libro a la base de datos
+     * Añade un registro de libro a la base de datos con todos los datos obtenido de la vista
      */
     public long InsertLibro(String titulo, String autor, String editorial, String isbn, String anio,
                             String paginas, Integer ebook, Integer leido, Float nota, String resumen) {
@@ -116,22 +84,22 @@ public class BDLibro {
         return this.myBD.insert(DATABASE_TABLE, null, campos);
     }
 
-
     /**
      * Elimina un registro de libro en la base de datos
+     *
      * @param rowId ID del libro que debe eliminar
      * @return
      */
     public boolean BorrarLibro(long rowId) {
 
-        return this.myBD.delete(DATABASE_TABLE, ROW_ID + "=" + rowId, null) > 0; //$NON-NLS-1$
+        return this.myBD.delete(DATABASE_TABLE, ROW_ID + "=" + rowId, null) > 0;
     }
 
     /**
      * Actualiza el registro de un libro
      */
     public boolean ActulizarLibro(long rowId, String titulo, String autor, String editorial, String isbn, String anio,
-                               String paginas, Integer ebook, Integer leido, Float nota, String resumen) {
+                                  String paginas, Integer ebook, Integer leido, Float nota, String resumen) {
         ContentValues campos = new ContentValues();
 
         campos.put(TITULO, titulo);
@@ -158,6 +126,7 @@ public class BDLibro {
 
     /**
      * Devuelve un determinado libro
+     *
      * @param rowId ID del libro que debe devolver
      */
     public Cursor RecuperaUnLibro(long rowId) {
@@ -205,5 +174,26 @@ public class BDLibro {
      */
     public void Cerrar() {
         this.mDbHelper.close();
+    }
+
+    private class DatabaseHelper extends SQLiteOpenHelper {
+
+        DatabaseHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL(DATABASE_CREATE);//Ejecutamos la setencia de crear la tabla libros
+        }
+
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                    + newVersion + ", which will destroy all old data");
+
+            onCreate(db);
+        }
     }
 }

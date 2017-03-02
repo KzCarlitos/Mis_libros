@@ -15,8 +15,8 @@ import java.sql.SQLException;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     ListView listaLibros;
-    private Cursor cursor;
     BDLibro DB;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btn_MAS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(), "Botón más pulsado", Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(getApplicationContext(), VistaLibro.class);
                 intent.putExtra("id", 0);
                 startActivity(intent);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /**
      * Actualiza la vista con los datos actuales de la base de datos
      */
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         ActualizaVista();
     }
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Adaptador adaptador = new Adaptador(this, cursor, 0);
 
             listaLibros.setAdapter(adaptador);//Pasamos al listview los libros del cursor
-        }else{
+        } else {
             listaLibros.removeAllViewsInLayout();//Si no hay libros, borra sus información en el layout
         }
 
